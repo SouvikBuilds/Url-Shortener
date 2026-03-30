@@ -17,18 +17,16 @@ export const handleGenerateNewShortUrl = asyncHandler(
         visitHistory: [],
       });
 
-      return res
-        .status(201)
-        .json(
-          new ApiResponse(
-            201,
-            {
-              id: shortId,
-              shotUrl: `http://localhost:8000/api/v1/url/${shortId}`,
-            },
-            "Short Url Created",
-          ),
-        );
+      return res.status(201).json(
+        new ApiResponse(
+          201,
+          {
+            id: shortId,
+            shotUrl: `${process.env.BACKEND_URL}/api/v1/url/${shortId}`,
+          },
+          "Short Url Created",
+        ),
+      );
     } catch (error) {
       console.log("Error: ", error);
       throw new ApiError(
@@ -81,5 +79,10 @@ export const handleGetAnalytics = asyncHandler(async (req, res, next) => {
           "analytics fetched successfully",
         ),
       );
-  } catch (error) {}
+  } catch (error) {
+    throw new ApiError(
+      error.statusCode || 500,
+      error.message || "Internal Server Error",
+    );
+  }
 });
